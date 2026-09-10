@@ -1,3 +1,5 @@
+**i18n** is literally <b>I</b>nternationalizatio<b>N</b> where `nternationalizatio` is 18 characters long, so the industry has shortened this word for **i18n.** _This i18n project attempts to serve that purpose using Go for web applications written in PHP, TypeScript, Ruby or Python._
+
 # About Play and Prosper's Sponsor i18n Offering
 
 The **i18n** product is being built to support philanthropic efforts of [Play and Prosper](https://playandprospertherapy.com/). This product was built to provide information resources to patients around the world in a localized and accessible manner. 
