@@ -328,6 +328,115 @@ while true; do
 done
 ```
 
+
+## i18n Management
+
+The application is designed to set it and forget it, but if you want to get into the day to day of managing it, you can access the Portal at [localhost:4444](http://127.0.0.1:4444). 
+
+### Dashboard
+
+The middle tabs live update.
+
+![Tab Dashboard](i18n_tab_dashboard.jpg)
+
+### Records Management
+
+With tens of thousands of records in the global system, each specific language will typically contain several thousand keys each. From this interface, you can directly access and play the sound file using an HTML5 element.
+
+![Tab Records](i18n_tab_records.jpg)
+
+### Trash
+
+The trash deletes itself based on the flag, and in the interface, you can empty the trash immediately.
+
+![Tab Trash](i18n_tab_trash.jpg)
+
+### Monitor
+
+Refresh cadence can be as often as every 5s to display the graphs and live data about the runtime of the application.
+
+![Tab Monitor](i18n_tab_monitor.jpg)
+
+![Tab Monitor Stats](i18n_tab_stats.jpg)
+
+You can also connect to Victoria Metrics or Prometheus to [http://localhost:8888/metrics](http://localhost:8888/metrics) and observe the following data points in your Grafana dashboard.
+
+```txt
+# HELP i18n_queue_depth Current translation queue size
+# TYPE i18n_queue_depth gauge
+i18n_queue_depth 2549
+# HELP i18n_pending_in_memory Deduplicated translations currently in flight
+# TYPE i18n_pending_in_memory gauge
+i18n_pending_in_memory 2550
+# HELP i18n_store_dirty Whether unsaved store changes are awaiting the next debounced flush
+# TYPE i18n_store_dirty gauge
+i18n_store_dirty 0
+# HELP i18n_store_ready Cached ready translations
+# TYPE i18n_store_ready gauge
+i18n_store_ready 35447
+# HELP i18n_store_pending Persisted pending translations
+# TYPE i18n_store_pending gauge
+i18n_store_pending 2550
+# HELP i18n_store_failed Persisted failed translations
+# TYPE i18n_store_failed gauge
+i18n_store_failed 1841
+# HELP i18n_requests_total Translation requests
+# TYPE i18n_requests_total counter
+i18n_requests_total 0
+# HELP i18n_cache_hits_total Translation cache hits
+# TYPE i18n_cache_hits_total counter
+i18n_cache_hits_total 0
+# HELP i18n_jobs_queued_total Translation jobs queued
+# TYPE i18n_jobs_queued_total counter
+i18n_jobs_queued_total 2570
+# HELP i18n_translations_total Successful translations
+# TYPE i18n_translations_total counter
+i18n_translations_total 20
+# HELP i18n_failures_total Permanently failed translations
+# TYPE i18n_failures_total counter
+i18n_failures_total 0
+# HELP i18n_deduplicated_total Duplicate pending jobs suppressed
+# TYPE i18n_deduplicated_total counter
+i18n_deduplicated_total 0
+# HELP i18n_cancelled_total Queued translations withdrawn before dispatch
+# TYPE i18n_cancelled_total counter
+i18n_cancelled_total 0
+# HELP i18n_audio_pending Audio assets queued or rendering
+# TYPE i18n_audio_pending gauge
+i18n_audio_pending 3
+# HELP i18n_audio_cooling Assets in post-failure cooldown
+# TYPE i18n_audio_cooling gauge
+i18n_audio_cooling 0
+# HELP i18n_audio_queued_total Audio jobs queued
+# TYPE i18n_audio_queued_total counter
+i18n_audio_queued_total 39
+# HELP i18n_audio_generated_total WAV assets rendered
+# TYPE i18n_audio_generated_total counter
+i18n_audio_generated_total 37
+# HELP i18n_audio_failed_total Audio renders that failed
+# TYPE i18n_audio_failed_total counter
+i18n_audio_failed_total 0
+# HELP i18n_audio_unsupported_total Assets skipped for unsupported language
+# TYPE i18n_audio_unsupported_total counter
+i18n_audio_unsupported_total 0
+# HELP i18n_audio_cancelled_total Queued audio withdrawn before rendering
+# TYPE i18n_audio_cancelled_total counter
+i18n_audio_cancelled_total 0
+# HELP i18n_audio_scans_total Completed backlog scans
+# TYPE i18n_audio_scans_total counter
+i18n_audio_scans_total 0
+```
+
+
+## Air Gap Projects
+
+Yes, **i18n** can run entirely offline while disconnected from the internet. Depending on your settings, the AI, TTS and transcoding can utilize your system resources extensively. If running on battery, you'll deplete quickly. If you're on a low powered source, like a train or bus, you'll be plugged in but your battery will keep going down faster than energy is going in. It's written in Go and designed to use the full resources available to it as if it was running on a server. Given this information, yes, you can run **i18n** while in Airplane mode and you'll generate _new translations_ for your content.
+
+What this really means is that if you're operating in a space that you **require air gap security** then this product is literally built _for you._ The developer of this project was recruited into Cisco Systems' in Enhanced Customer Aligned Testing Services (eCATS) that got transformed into Solution Validation Services (SVS). Much of the software there and then needed to run in air-gapped networks. That work happened 17 years ago! A decade ago they were at Oracle releasing OCI into the world to compete with Amazon's AWS. Air gapped security was mandatory. 
+
+This means organizations like _Defense, Gaming, Finance and Education_ can utilize #i18n to provide a **rich user experience** designed to demystify globalization, speech language pathology, and advance the causes of Dr Ajzenman's Play and Prosper Therapy through sponsoring this project. A simple sponsorship gets you a seat at the table during the development of this product that will be used to globally transform treatment approaches for disabled children worldwide.
+
+
 ## Configuration
 
 When reading the following table, note that I am using _shorthand notation_ for the following types.
@@ -780,113 +889,6 @@ This frontend implementation of `i18n-mousetrap.js` is part of how Play and Pros
 2. Else, if the fragment is available in **i18n** that [voicebox](https://github.com/jamiepine/voicebox) rendered into a `.wav` or `.mp3` file, depending on the runtime of the binary.
 3. The same player component is used, which means pressing **s** on sentence after sentence, reuses the same player.
 4. The **s** key was selected for **speak**. Granted that can change based on which language. For the website, it'll stay **s**.
-
-## i18n Management
-
-The application is designed to set it and forget it, but if you want to get into the day to day of managing it, you can access the Portal at [localhost:4444](http://127.0.0.1:4444). 
-
-### Dashboard
-
-The middle tabs live update.
-
-![Tab Dashboard](i18n_tab_dashboard.jpg)
-
-### Records Management
-
-With tens of thousands of records in the global system, each specific language will typically contain several thousand keys each. From this interface, you can directly access and play the sound file using an HTML5 element.
-
-![Tab Records](i18n_tab_records.jpg)
-
-### Trash
-
-The trash deletes itself based on the flag, and in the interface, you can empty the trash immediately.
-
-![Tab Trash](i18n_tab_trash.jpg)
-
-### Monitor
-
-Refresh cadence can be as often as every 5s to display the graphs and live data about the runtime of the application.
-
-![Tab Monitor](i18n_tab_monitor.jpg)
-
-![Tab Monitor Stats](i18n_tab_stats.jpg)
-
-You can also connect to Victoria Metrics or Prometheus to [http://localhost:8888/metrics](http://localhost:8888/metrics) and observe the following data points in your Grafana dashboard.
-
-```txt
-# HELP i18n_queue_depth Current translation queue size
-# TYPE i18n_queue_depth gauge
-i18n_queue_depth 2549
-# HELP i18n_pending_in_memory Deduplicated translations currently in flight
-# TYPE i18n_pending_in_memory gauge
-i18n_pending_in_memory 2550
-# HELP i18n_store_dirty Whether unsaved store changes are awaiting the next debounced flush
-# TYPE i18n_store_dirty gauge
-i18n_store_dirty 0
-# HELP i18n_store_ready Cached ready translations
-# TYPE i18n_store_ready gauge
-i18n_store_ready 35447
-# HELP i18n_store_pending Persisted pending translations
-# TYPE i18n_store_pending gauge
-i18n_store_pending 2550
-# HELP i18n_store_failed Persisted failed translations
-# TYPE i18n_store_failed gauge
-i18n_store_failed 1841
-# HELP i18n_requests_total Translation requests
-# TYPE i18n_requests_total counter
-i18n_requests_total 0
-# HELP i18n_cache_hits_total Translation cache hits
-# TYPE i18n_cache_hits_total counter
-i18n_cache_hits_total 0
-# HELP i18n_jobs_queued_total Translation jobs queued
-# TYPE i18n_jobs_queued_total counter
-i18n_jobs_queued_total 2570
-# HELP i18n_translations_total Successful translations
-# TYPE i18n_translations_total counter
-i18n_translations_total 20
-# HELP i18n_failures_total Permanently failed translations
-# TYPE i18n_failures_total counter
-i18n_failures_total 0
-# HELP i18n_deduplicated_total Duplicate pending jobs suppressed
-# TYPE i18n_deduplicated_total counter
-i18n_deduplicated_total 0
-# HELP i18n_cancelled_total Queued translations withdrawn before dispatch
-# TYPE i18n_cancelled_total counter
-i18n_cancelled_total 0
-# HELP i18n_audio_pending Audio assets queued or rendering
-# TYPE i18n_audio_pending gauge
-i18n_audio_pending 3
-# HELP i18n_audio_cooling Assets in post-failure cooldown
-# TYPE i18n_audio_cooling gauge
-i18n_audio_cooling 0
-# HELP i18n_audio_queued_total Audio jobs queued
-# TYPE i18n_audio_queued_total counter
-i18n_audio_queued_total 39
-# HELP i18n_audio_generated_total WAV assets rendered
-# TYPE i18n_audio_generated_total counter
-i18n_audio_generated_total 37
-# HELP i18n_audio_failed_total Audio renders that failed
-# TYPE i18n_audio_failed_total counter
-i18n_audio_failed_total 0
-# HELP i18n_audio_unsupported_total Assets skipped for unsupported language
-# TYPE i18n_audio_unsupported_total counter
-i18n_audio_unsupported_total 0
-# HELP i18n_audio_cancelled_total Queued audio withdrawn before rendering
-# TYPE i18n_audio_cancelled_total counter
-i18n_audio_cancelled_total 0
-# HELP i18n_audio_scans_total Completed backlog scans
-# TYPE i18n_audio_scans_total counter
-i18n_audio_scans_total 0
-```
-
-
-## Air Gap Projects
-
-Yes, **i18n** can run entirely offline while disconnected from the internet. Depending on your settings, the AI, TTS and transcoding can utilize your system resources extensively. If running on battery, you'll deplete quickly. If you're on a low powered source, like a train or bus, you'll be plugged in but your battery will keep going down faster than energy is going in. It's written in Go and designed to use the full resources available to it as if it was running on a server. Given this information, yes, you can run **i18n** while in Airplane mode and you'll generate _new translations_ for your content.
-
-What this really means is that if you're operating in a space that you **require air gap security** then this product is literally built _for you._ The developer of this project was recruited into Cisco Systems' in Enhanced Customer Aligned Testing Services (eCATS) that got transformed into Solution Validation Services (SVS). Much of the software there and then needed to run in air-gapped networks. That work happened 17 years ago! A decade ago they were at Oracle releasing OCI into the world to compete with Amazon's AWS. Air gapped security was mandatory. 
-
-This means organizations like _Defense, Gaming, Finance and Education_ can utilize #i18n to provide a **rich user experience** designed to demystify globalization, speech language pathology, and advance the causes of Dr Ajzenman's Play and Prosper Therapy through sponsoring this project. A simple sponsorship gets you a seat at the table during the development of this product that will be used to globally transform treatment approaches for disabled children worldwide.
 
 ## Thank You!
 
