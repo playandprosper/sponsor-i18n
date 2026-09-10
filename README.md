@@ -306,6 +306,203 @@ If you don't want your code to look like that, you don't have to! You can also u
 </html>
 ```
 
+When running **i18n**, it's important to remember a few things: 
+
+1. `__()`'s arguments
+
+```php
+string $text,
+?bool $raw = null,
+string|array $icon = "",
+string $place = "left",
+string|array $classes = [],
+```
+
+You'll often see `i18n::__("Home", null, "bi-house-fill")` and this renders `<span class='i18n-what'><i class='bi bi-house-fill'></i> Home</span>`. The wrapping `<span>` includes several data properties render from:
+
+```php
+echo $place === "right"
+    ? "<span class='{$classes_str}' data-locale='{$locale}' data-src='{$b64translated}' data-key='{$b64original}'>{$translated} {$icon_str}</span>"
+    : "<span class='{$classes_str}' data-locale='{$locale}' data-src='{$b64translated}' data-key='{$b64original}'>{$icon_str} {$what}</span>";
+```
+
+2. The `i18n-what` is connected to [mousetrap]9https://github.com/ccampbell/mousetrap) via this integration script:
+
+```js
+Mousetrap.bind('s', function() {
+    speak(active_i18n());
+}, 'keyup');
+```
+
+The implementations of `speak()` and `active_i18n()` are: 
+
+```js
+async function speak(active_i18n) {
+    try {
+        const src = active_i18n.getAttribute('data-src');
+        const key = active_i18n.getAttribute('data-key');
+
+        let locale = active_i18n.getAttribute('data-locale');
+
+        const original = phpBase64Decode(src);
+        const translated = phpBase64Decode(key);
+
+        locale = locale.replace('_', '-');
+
+        let useGoogle = document.body.dataset.useGoogle !== undefined && document.body.dataset.useGoogle === "true";
+        let voice = await getVoice(locale, useGoogle);
+
+        if (undefined !== voice) {
+            const utterance = new SpeechSynthesisUtterance(original);
+            utterance.lang = locale;
+            utterance.voice = voice;
+            window.speechSynthesis.speak(utterance);
+            return
+        }
+
+        const [ originalHash, translatedHash] = await Promise.all([
+            sha256Hex(original),
+            sha256Hex(translated),
+        ]);
+
+        for (const ext of ["mp3", "wav"]) {
+            if (await hash_exists("en_US", originalHash, locale, translatedHash, ext)) {
+                play(`/${ext}/` + path_for_hash("en_US", originalHash, locale, translatedHash, ext));
+                return;
+            }
+        }
+    } catch (e) {
+        active_i18n.classList.remove("i18n-what");
+        active_i18n.classList.add('i18n-not-found');
+        console.log(e)
+    }
+}
+```
+
+Selecting the active **i18n** element that has the 👂🏻 cursor and pressing **s** uses this to capture the chosen translation.
+
+```js
+function active_i18n() {
+    const matches = document.querySelectorAll('.i18n-what:hover');
+    return matches.length ? matches[matches.length - 1] : null;
+}
+```
+
+Below `play()` is the `phpBase64Decode()`, `getVoice()`, `sha256Hex()`, `hash_exists()`, and `path_for_hash()` implementation. 
+
+```js
+const AP = new Audio();
+function play(url) {
+    AP.src = url;
+    return AP.play().catch(console.error);
+}
+```
+
+```js
+function phpBase64Decode(base64String) {
+    const binaryStr = atob(base64String);
+    const bytes = Uint8Array.from(binaryStr, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+}
+
+async function sha256Hex(str) {
+    const bytes = new TextEncoder().encode(str); 
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+function path_for_hash(src_locale, src_hash, dst_locale, dst_hash, ext = "mp3"){
+    const result = {
+        "mp3": `${dst_locale}.${dst_hash}.${src_locale}.${src_hash}.mp3`,
+        "wav": `${dst_locale}.${src_hash}.wav`,
+    }[ext] ?? (() => { throw new Error("unsupported extension"); })();
+    return result;
+}
+
+async function hash_exists(src_locale, src_hash, dst_locale, dst_hash, ext = "mp3") {
+    try {
+        const should_be_path = path_for_hash(src_locale, src_hash, dst_locale, dst_hash, ext)
+
+        console.log("PATH = ", should_be_path);
+
+        const response = await fetch(`/file/exists`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                "src_locale": src_locale,
+                "src_hash": src_hash,
+                "dst_locale": dst_locale,
+                "dst_hash": dst_hash,
+                "ext": ext,
+                "should_be_path": should_be_path,
+            }),
+            signal: AbortSignal.timeout(777)
+        });
+        if (!response.ok) return false;
+
+        const data = await response.json();
+        return true === data.success && data.exists === true;
+    } catch {
+        return false;
+    }
+}
+
+function base64UrlDecode(b64url) {
+    let b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new TextDecoder('utf-8').decode(bytes);
+}
+```
+
+And the `getVoices()` related functions: 
+
+```js
+
+function loadVoices(timeoutMs = 2000) {
+    return new Promise((resolve) => {
+        let voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            resolve(voices);
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            window.speechSynthesis.onvoiceschanged = null;
+            resolve(window.speechSynthesis.getVoices());
+        }, timeoutMs);
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            clearTimeout(timer);
+            voices = window.speechSynthesis.getVoices();
+            resolve(voices);
+        };
+    });
+}
+
+async function getVoice(langCode, useGoogle = false) {
+    const voices = await loadVoices();
+    console.log(voices);
+    return true == useGoogle
+        ? voices.find(v => v.lang === langCode && v.name.startsWith("Google"))
+        : voices.find(v => v.lang === langCode);
+}
+```
+
+This frontend implementation of `i18n-mousetrap.js` is part of how Play and Prosper will implement the **i18n** package and this is how we did it. 
+
+1. Is there a built-in Google synthesized voice available? If so, use it.
+2. Else, if the fragment is available in **i18n** that [voicebox](https://github.com/jamiepine/voicebox) rendered into a `.wav` or `.mp3` file, depending on the runtime of the binary.
+3. The same player component is used, which means pressing **s** on sentence after sentence, reuses the same player.
+4. The **s** key was selected for **speak**. Granted that can change based on which language. For the website, it'll stay **s**.
+
+
 ## Running `i18n`
 
 The **Play and Prosper** website uses this helper script to boot `voicebox-server` and `i18n`. It requires **LMStudio** to be opened manually before launching. However, once running, this script makes some assumptions. 
