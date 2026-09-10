@@ -597,4 +597,5 @@ What this really means is that if you're operating in a space that you **require
 
 Thank you for using **i18n** and for choosing to sponsor the development of this piece of globalization technology.
 
+![Footer](website_footer_english_preview.jpg)
 
