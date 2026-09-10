@@ -105,6 +105,31 @@ type str string
 | `-transcode-failure-pause` a `dur` is `30 * min`  | Cooldown between retries |
 | `-transcode-keep-wav` a `bool` is `false`  | Leave `.wav` after `.mp3` verified |
 
+When using _dur_ or `time.Duration`, it's captured as an `int` and requires you to use `time.Duration` values.
+
+| Human Time | Duration Value | Go Syntax |
+|---|---|---|
+| `1s` | `1000000000` | `1 * time.Second` |
+| `5s` | `5000000000` | `5 * time.Second` |
+| `10s` | `10000000000` | `10 * time.Second` |
+| `15s` | `15000000000` | `15 * time.Second` |
+| `20s` | `20000000000` | `20 * time.Second` |
+| `25s` | `25000000000` | `25 * time.Second` |
+| `30s` | `30000000000` | `30 * time.Second` |
+| `35s` | `35000000000` | `35 * time.Second` |
+| `40s` | `40000000000` | `40 * time.Second` |
+| `45s` | `45000000000` | `45 * time.Second` |
+| `50s` | `50000000000` | `50 * time.Second` |
+| `55s` | `55000000000` | `55 * time.Second` |
+| `60s` | `60000000000` | `60 * time.Second` |
+| `90s` | `90000000000` | `90 * time.Second` |
+| `120s` | `120000000000` | `120 * time.Second` |
+| `150s` | `150000000000` | `150 * time.Second` |
+| `180s` | `180000000000` | `180 * time.Second` |
+| `210s` | `210000000000` | `210 * time.Second` |
+| `240s` | `240000000000` | `240 * time.Second` |
+| `270s` | `270000000000` | `270 * time.Second` |
+| `300s` | `300000000000` | `300 * time.Second` |
 
 
 
