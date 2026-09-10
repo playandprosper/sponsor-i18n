@@ -304,6 +304,293 @@ If you don't want your code to look like that, you don't have to! You can also u
 </html>
 ```
 
+## Running `i18n`
+
+The **Play and Prosper** website uses this helper script to boot `voicebox-server` and `i18n`. It requires **LMStudio** to be opened manually before launching. However, once running, this script makes some assumptions. 
+
+1. That LMStudio's API port was changed from `:1234` to `:17369`
+2. That `voicebox-server` is binding to port `:17493`
+3. Voicebox Profile IDs are found at http://127.0.0.1:17493/profiles, take the ID and set that
+4. LMStudio should have the model downloaded, we're using `qwen3.6-35b-a3b` and `qwen3.8-27b` between both hosts.
+5. The you are running this script from a folder that contains subdirectories `application/i18n/db`, `public/wav` and `public/mp3`.
+6. Unless your username is `andrei` you can change paths to point to your data
+
+Here is the Bash script: 
+
+```bash
+#!/usr/bin/env bash
+set -uo pipefail
+
+ : "${VOICEBOX_PORT=17493}"
+ : "${LMSTUDIO_PORT=17369}"
+
+ : "${STUDIO_IP="192.168.128.2"}"
+ : "${LAPTOP_IP="127.0.0.1"}"
+
+ : "${STUDIO_LMSTUDIO_MODEL="qwen3.6-35b-a3b"}"
+# : "${STUDIO_VOICEBOX_PROFILE="77c832a0-a4c6-4b72-a369-2f44d573843a"}" # Andrei
+ : "${STUDIO_VOICEBOX_PROFILE="aff45bac-010c-4ca4-9231-b0a2d36d20a9"}" # Heather
+
+ : "${LAPTOP_LMSTUDIO_MODEL="qwen3.8-27b"}"
+# : "${LAPTOP_VOICEBOX_PROFILE="e28f8dcf-7397-44e7-994a-1b03fc35f203"}" # Andrei
+ : "${LAPTOP_VOICEBOX_PROFILE="aff45bac-010c-4ca4-9231-b0a2d36d20a9"}" # Heather
+
+ : "${DB_DIR="./application/i18n/db"}"
+ : "${WAV_DIR="./public/wav"}"
+ : "${MP3_DIR="./public/mp3"}"
+
+ : "${REMOTE_LOG_DIR="/Users/andrei/Desktop"}"
+ : "${REMOTE_SERVER_DIR="/Applications/Voicebox.app/Contents/MacOS"}"
+ : "${REMOTE_DATA_DIR="/Users/andrei/Library/Application Support/sh.voicebox.app"}"
+
+ : "${LOG_DIR="./logs"}"
+ : "${LOCAL_SERVER_DIR="/Applications/Voicebox.app/Contents/MacOS"}" 
+ : "${LOCAL_DATA_DIR="/Users/andrei/Library/Application Support/sh.voicebox.app"}"
+
+ : "${DB="${DB_DIR}/playandprosper.json"}"
+
+ : "${STUDIO_LMSTUDIO_URL="http://${STUDIO_IP}:${LMSTUDIO_PORT}/v1"}"
+ : "${STUDIO_VOICEBOX_URL="http://${STUDIO_IP}:${VOICEBOX_PORT}"}"
+
+ : "${LAPTOP_LMSTUDIO_URL="http://${LAPTOP_IP}:${LMSTUDIO_PORT}/v1"}"
+ : "${LAPTOP_VOICEBOX_URL="http://${LAPTOP_IP}:${VOICEBOX_PORT}"}"
+
+ : "${VB_SVR_1="${STUDIO_VOICEBOX_URL}=${STUDIO_VOICEBOX_PROFILE}"}"
+ : "${VB_SVR_2="${LAPTOP_VOICEBOX_URL}=${LAPTOP_VOICEBOX_PROFILE}"}"
+ : "${LM_SVR_1="${STUDIO_LMSTUDIO_URL}=${STUDIO_LMSTUDIO_MODEL}"}"
+ : "${LM_SVR_2="${LAPTOP_LMSTUDIO_URL}=${LAPTOP_LMSTUDIO_MODEL}"}"
+
+ : "${VOICEBOX_ENGINE="chatterbox"}"
+
+ : "${PORTAL_PASS="generate"}"
+
+if [[ "${PORTAL_PASS}" == "generate" ]]; then
+  PORTAL_PASS=$(genwordpass)
+  echo "-----------------------------------------------------------------------"
+  echo "🚨🚨🚨                                                          🚨🚨🚨"
+  echo "🚨🚨🚨 YOUR TEMPORARY PORTAL_PASS ${PORTAL_PASS}                🚨🚨🚨"
+  echo "🚨🚨🚨 We've placed the temporary password into your clipboard. 🚨🚨🚨"
+  echo "🚨🚨🚨                                                          🚨🚨🚨"
+  echo "========================================================================"
+  echo $PORTAL_PASS | pbcopy
+fi
+
+check(){
+  if [[ ! -d "${LOG_DIR}" ]]; then
+    mkdir -p "${LOG_DIR}"
+  fi
+}
+
+run_voicebox(){
+  mkdir -p "${LOG_DIR}"
+
+  if lsof -i :"${VOICEBOX_PORT}" -sTCP:LISTEN -t >/dev/null 2>&1; then
+    echo "✅ voicebox already listening on 127.0.0.1:${VOICEBOX_PORT}"
+    return 0
+  fi
+
+  echo "🚀 starting voicebox on 127.0.0.1:${VOICEBOX_PORT}"
+
+  "${LOCAL_SERVER_DIR}/voicebox-server" \
+    --data-dir "${LOCAL_DATA_DIR}" \
+    --port "${VOICEBOX_PORT}" \
+    --host 127.0.0.1 \
+    >"${LOG_DIR}/voicebox.log" 2>&1 &
+
+  local deadline=$((SECONDS + 120))
+  while ((SECONDS < deadline)); do
+    if curl -fsS --max-time 2 "http://127.0.0.1:${VOICEBOX_PORT}/health" >/dev/null 2>&1; then
+      echo "✅ voicebox healthy on 127.0.0.1:${VOICEBOX_PORT}"
+      return 0
+    fi
+    sleep 1
+  done
+
+  echo "❌ 🚨 voicebox did not become healthy within 120s; see ${LOG_DIR}/voicebox.log" >&2
+  return 1
+}
+
+remote_voicebox() {
+  echo "🚀 starting voicebox on ${STUDIO_IP}:${VOICEBOX_PORT}"
+
+  ssh -i ~/.ssh/laptop_to_studio_id_ed25519_c33p andrei@studio.local "
+    echo \"Connecting to port: ${VOICEBOX_PORT}\n\"
+    if ! lsof -i :${VOICEBOX_PORT} -sTCP:LISTEN -t >/dev/null 2>&1; then
+      nohup \"${REMOTE_SERVER_DIR}/voicebox-server\" \
+        --data-dir \"${REMOTE_DATA_DIR}\" \
+        --port ${VOICEBOX_PORT} \
+        --host 0.0.0.0 > \"${REMOTE_LOG_DIR}/voicebox.log\" 2>&1 &
+      stat \"\$HOME/Desktop/voicebox.log\"
+      disown
+    fi
+  "
+
+  local deadline=$((SECONDS + 120))
+  while ((SECONDS < deadline)); do
+    if curl -fsS --max-time 2 "${STUDIO_VOICEBOX_URL}/health" >/dev/null 2>&1; then
+      echo "✅ voicebox healthy on ${STUDIO_IP}:${VOICEBOX_PORT}"
+      return 0
+    fi
+    sleep 1
+  done
+
+  echo "❌ 🚨 remote voicebox did not become healthy within 120s" >&2
+  return 1
+}
+
+# localhost
+localhost(){
+  run_voicebox
+  echo $PORTAL_PASS | pbcopy
+  i18n \
+    -db "${DB}" \
+    -log-dir "${LOG_DIR}" \
+    -lm-url "${LAPTOP_LMSTUDIO_URL}" \
+    -lm-model "${LAPTOP_LMSTUDIO_MODEL}" \
+    -portal \
+    -portal-port 4444 \
+    -portal-prune-every 17 \
+    -portal-token "${PORTAL_PASS}" \
+    -request-timeout 3m33s \
+    -retries 3 \
+    -shutdown-wait 33s \
+    -wav-dir "${WAV_DIR}" \
+    -voicebox-url "${LAPTOP_VOICEBOX_URL}" \
+    -voicebox-profile "${LAPTOP_VOICEBOX_PROFILE}" \
+    -voicebox-engine "${VOICEBOX_ENGINE}" \
+    -audio-background \
+    -transcode \
+    -mp3-dir "${MP3_DIR}"
+}
+
+remote(){
+  remote_voicebox
+  run_voicebox
+  echo $PORTAL_PASS | pbcopy
+  VOICEBOX_SERVERS="${VB_SVR_1},${VB_SVR_2}" \
+  i18n \
+    -db "${DB}" \
+    -log-dir "${LOG_DIR}" \
+    -lm-url "${STUDIO_LMSTUDIO_URL}" \
+    -lm-model "${STUDIO_LMSTUDIO_MODEL}" \
+    -portal \
+    -portal-port 4444 \
+    -portal-prune-every 17 \
+    -portal-token "${PORTAL_PASS}" \
+    -request-timeout 3m33s \
+    -retries 3 \
+    -shutdown-wait 33s \
+    -voicebox-profile "${STUDIO_VOICEBOX_PROFILE}" \
+    -voicebox-engine "${VOICEBOX_ENGINE}" \
+    -transcode \
+    -audio-background \
+    -wav-dir "${WAV_DIR}" \
+    -mp3-dir "${MP3_DIR}"
+}
+
+multi(){
+  remote_voicebox
+  run_voicebox
+  echo $PORTAL_PASS | pbcopy
+  # Multi Host
+  VOICEBOX_SERVERS="${VB_SVR_1},${VB_SVR_2}" \
+  LMSTUDIO_SERVERS="${LM_SVR_1},${LM_SVR_2}" \
+  i18n \
+    -db "${DB}" \
+    -log-dir "${LOG_DIR}" \
+    -portal \
+    -portal-port 4444 \
+    -portal-prune-every 17 \
+    -portal-token "${PORTAL_PASS}" \
+    -request-timeout 3m33s \
+    -retries 3 \
+    -shutdown-wait 33s \
+    -wav-dir "${WAV_DIR}" \
+    -voicebox-engine "${VOICEBOX_ENGINE}" \
+    -audio-background \
+    -transcode \
+    -mp3-dir "${MP3_DIR}"
+}
+
+check
+
+remote_tail() {
+  local path="${1}"
+  local cmd="tail -f -n +1 ${path}"
+  ssh andrei@studio.local "${cmd}"
+}
+
+if [ "${1:-}" == "voicebox" ]; then
+  run_voicebox
+  exit
+fi
+
+if [ "${1:-}" == "remote-voicebox" ]; then
+  remote_voicebox
+  remote_tail "${REMOTE_LOG_DIR}/voicebox.log"
+  exit
+fi
+
+if [ "${1:-}" == "multi-voicebox" ]; then
+  remote_voicebox
+  remote_tail "${REMOTE_LOG_DIR}/voicebox.log" &
+  run_voicebox
+  exit
+fi
+
+if ! command -v genwordpass; then
+  go install github.com/andreimerlescu/genwordpass@latest
+fi
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "❌ 🚨 ffmpeg is required for -transcode; install it with: brew install ffmpeg" >&2
+  exit 1
+fi
+
+if ! ffmpeg -hide_banner -encoders 2>/dev/null | grep -q libmp3lame; then
+  echo "❌ 🚨 ffmpeg has no libmp3lame encoder; reinstall with: brew reinstall ffmpeg" >&2
+  exit 1
+fi
+
+echo "✅ ffmpeg with libmp3lame available"
+
+
+
+if [ "${1:-}" == "local" ]; then
+  localhost
+  exit
+fi
+
+if [ "${1:-}" == "remote" ]; then
+  remote
+  exit
+fi
+
+if [ "${1:-}" == "multi" ] || [ "${1:-}" == "both" ]; then
+  multi
+  exit
+fi
+
+while true; do
+  echo "How do you want to run this?"
+  echo "  1| local "
+  echo "  2| remote "
+  echo "  3| multi "
+  echo
+  read -p "Choose one (1|2|3)?: " yn
+  case $yn in
+    [1Ll]* ) localhost; break;;
+    [2Rr]* ) remote; break;;
+    [3Mm]* ) multi; exit 0;;
+    *     ) echo "Invalid input. Please enter '1', '2' or '3'. "; continue;;
+  esac
+done
+```
+
+Yes, **i18n** can run entirely offline while disconnected from the internet. Depending on your settings, the AI, TTS and transcoding can utilize your system resources extensively. If running on battery, you'll deplete quickly. If you're on a low powered source, like a train or bus, you'll be plugged in but your battery will keep going down faster than energy is going in. It's written in Go and designed to use the full resources available to it as if it was running on a server. Given this information, yes, you can run **i18n** while in Airplane mode and you'll generate _new translations_ for your content.
+
+What this really means is that if you're operating in a space that you **require air gap security** then this product is literally built _for you._ The developer of this project was recruited into Cisco Systems' in Enhanced Customer Aligned Testing Services (eCATS) that got transformed into Solution Validation Services (SVS). Much of the software there and then needed to run in air-gapped networks. That work happened 17 years ago! A decade ago they were at Oracle releasing OCI into the world to compete with Amazon's AWS. Air gapped security was mandatory. 
+
 ## Thank You!
 
 Thank you for using **i18n** and for choosing to sponsor the development of this piece of globalization technology.
