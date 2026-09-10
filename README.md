@@ -1,8 +1,8 @@
-🥇 **i18n** is literally <b>I</b>nternationalizatio<b>N</b> where between the I and the N is `nternationalizatio` is 18 characters long, so the industry has shortened this word for **i18n.** 
+🥇 **i18n** is literally <b>I</b>nternationalizatio<b>N</b> where between the I and the N is `nternationalizatio` is 18 characters long, so the industry has shortened this word for **i18n.** This project requires an intermediate level of web developer experience. 
 
-🥈 _This i18n project attempts to serve that purpose using Go for web applications written in PHP, TypeScript, Ruby or Python._
+🥈 This i18n project attempts to serve that purpose using Go for web applications written in PHP, TypeScript, Ruby, Python or anything capable of consuming HTTP2 GET to `127.0.0.1:8888/ro_RO` with a post body.
 
-🥉 _This project is available under a limited use BUSL 1.1 license until 11/11/2033 when the **i18n** project will become open source under the _Apache 2.0 License._ Until then, any use of the project should result in direct sponsorship via GitHub.
+🥉 This project is available under a limited use BUSL 1.1 license until 11/11/2033 when the **i18n** project will become open source under the _Apache 2.0 License._ Until then, any use of the project should result in direct sponsorship via GitHub.
 
 # About Play and Prosper's Sponsor i18n Offering
 
