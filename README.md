@@ -11,6 +11,11 @@ The **i18n** product is being built to support philanthropic efforts of [Play an
 - 📦 Repository 👉🏻 https://github.com/playandprosper/i18n 🔒
 - 🔓 Unlock 👉🏻 https://github.com/sponsors/andreimerlescu 🤩
 
+`.wav` Sample Audio `de_DE`: (40553f7e6b6cf59678e9cf35fc84ebeb53d09c983b20da756fa8faef1b1343bc.de_DE.wav)[40553f7e6b6cf59678e9cf35fc84ebeb53d09c983b20da756fa8faef1b1343bc.de_DE.wav]
+
+`.mp3` Sample Audio `ru_RU`: [ru_RU.d259495e142fe3f26e27be4dec63d03dc985daba73c23e7d3b36b807832674fe.en_US.ce06a6280ae22bd3e65552989baa29c512eb7cdd61dd206b1257066de19cfa36.mp3](ru_RU.d259495e142fe3f26e27be4dec63d03dc985daba73c23e7d3b36b807832674fe.en_US.ce06a6280ae22bd3e65552989baa29c512eb7cdd61dd206b1257066de19cfa36.mp3)
+
+
 **i18n** is a universal application written in _Go_ that provides an internationalization and localization daemon that a web application can consume to provide translations in dozens of languages using AI. The application does not run AI for every request. It caches translated keys and provides hot cache access to those keys. It has the ability to render text and audio translations.
 
 ![Preview of Play and Prosper Website](website_banner_greek_preview.jpg)
