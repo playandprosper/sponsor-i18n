@@ -326,7 +326,7 @@ echo $place === "right"
     : "<span class='{$classes_str}' data-locale='{$locale}' data-src='{$b64translated}' data-key='{$b64original}'>{$icon_str} {$what}</span>";
 ```
 
-2. The `i18n-what` is connected to [mousetrap]9https://github.com/ccampbell/mousetrap) via this integration script:
+2. The `i18n-what` is connected to [mousetrap](https://github.com/ccampbell/mousetrap) via this integration script:
 
 ```js
 Mousetrap.bind('s', function() {
