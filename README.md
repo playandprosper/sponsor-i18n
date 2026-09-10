@@ -40,7 +40,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 ## Configuration
 
 ```go
-type duration time.Duration
+type dur time.Duration
 type sec time.Second
 type min time.Minute
 type str string
@@ -65,10 +65,10 @@ type str string
 | `-retries` a `int` is `1` | `I18N_CLI_RETRIES`  | **CLI Mode:** Retry count before giving up |
 | `-queue-size` a `int` is `8192` | `I18N_QUEUE_SIZE`  |  Maximum queued translations |
 | `-max-retries` a `int` is `7` | `I18N_MAX_RETRIES`  | Maxmimum retry attempts |
-| `-shutdown-wait` a `duration` is `15 * sec` | `-`  | Shutdown drain time limit |
-| `-failure-pause` a `duration` is `5 * min` | `-`  | Cooldown between retries |
-| `-flush-interval` a `duration` is `2 * min` | `I18N_FLUSH_INTERVAL`  | DB Persistence Cadence |
-| `-request-timeout` a `duration` is `90 * sec` | `-`  | LMStudio Request Timeout |
+| `-shutdown-wait` a `dur` is `15 * sec` | `-`  | Shutdown drain time limit |
+| `-failure-pause` a `dur` is `5 * min` | `-`  | Cooldown between retries |
+| `-flush-interval` a `dur` is `2 * min` | `I18N_FLUSH_INTERVAL`  | DB Persistence Cadence |
+| `-request-timeout` a `dur` is `90 * sec` | `-`  | LMStudio Request Timeout |
 | `-log` a `string` is `<empty>` | `I18N_LOG`  | Alias for `-log-path` and `-log-dir` |
 | `-log-path` a `str` is `<empty>` | `I18N_LOG_PATH`  | File path to append new log messages |
 | `-log-dir` a `str` is `<empty>` | `I18N_LOG_DIR`  | Directory for `i18n-#.log` rotated logs |
@@ -80,7 +80,7 @@ type str string
 | `-voicebox-profile` a `str` is `<empty>` | `VOICEBOX_PROFILE_ID`  | Voice ID to use |
 | `-voicebox-engine` a `str` is `<empty>` | `VOICEBOX_ENGINE`  | Voicebox Engine to use |
 | `-voicebox-token` a `str` is `<empty>` | `VOICEBOX_TOKEN`  | Voicebox API Bearer Token |
-| `-audio-timeout` a `duration` is `5 * min` | `-`  | Max allowed process time per entry |
+| `-audio-timeout` a `dur` is `5 * min` | `-`  | Max allowed process time per entry |
 | `-audio-retries` a `int` is `3` | `-`  | Max retires for failed audio |
 | `-audio-force` a `bool` is `false` | `-`  | Ignore cached audio files and regenerate |
 | `-audio-strict` a `bool` is `false` | `-`  | Abort entire compile on single key failure |
@@ -99,8 +99,8 @@ type str string
 | `-ffmpeg` a `str` is `ffmpeg` | `I18N_FFMPEG`  | Path to `ffmpeg` binary |
 | `-mp3-bitrate` a `str` is `48k` | `I18N_MP3_BITRATE`  | Bitrate for `.mp3` files |
 | `-transcode-workers` a `int` is `1` | `I18N_TRANSCODE_WORKERS`  | Concurrent ffmpeg processes |
-| `-transcode-scan-interval` a `duration` is `5 * min` | `-`  | `.wav` to `.mp3` interval cooldown |
-| `-transcode-failure-pause` a `duration` is `30 * min` | `I18N_TRANSCODE_FAILURE_PAUSE`  | Cooldown between retries |
+| `-transcode-scan-interval` a `dur` is `5 * min` | `-`  | `.wav` to `.mp3` interval cooldown |
+| `-transcode-failure-pause` a `dur` is `30 * min` | `I18N_TRANSCODE_FAILURE_PAUSE`  | Cooldown between retries |
 | `-transcode-keep-wav` a `bool` is `false` | `-`  | Leave `.wav` after `.mp3` verified |
 
 
