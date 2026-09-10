@@ -335,7 +335,7 @@ The application is designed to set it and forget it, but if you want to get into
 
 ### Dashboard
 
-The middle tabs live update.
+Every piece of data live updates every 5s. 
 
 ![Tab Dashboard](i18n_tab_dashboard.jpg)
 
