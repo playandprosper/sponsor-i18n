@@ -1,4 +1,4 @@
-# Sponsor i18n
+# About Play and Prosper's Sponsor i18n Offering
 
 The **i18n** product is being built to support philanthropic efforts of [Play and Prosper](https://playandprospertherapy.com/). This product was built to provide information resources to patients around the world in a localized and accessible manner. 
 
