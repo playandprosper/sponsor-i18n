@@ -39,6 +39,8 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 
 ## Configuration
 
+When reading the following table, note that I am using _shorthand notation_ for the following types.
+
 ```go
 type dur time.Duration
 type sec time.Second
