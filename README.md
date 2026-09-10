@@ -1,11 +1,21 @@
 # Sponsor i18n
 
+The **i18n** product is being built to support philanthropic efforts of [Play and Prosper](https://playandprospertherapy.com/). This product was built to provide information resources to patients around the world in a localized and accessible manner. 
+
 - 📦 Repository 👉🏻 https://github.com/playandprosper/i18n 🔒
 - 🔓 Unlock 👉🏻 https://github.com/sponsors/andreimerlescu 🤩
 
+**i18n** is a universal application written in _Go_ that provides an internationalization and localization daemon that a web application can consume to provide translations in dozens of languages using AI. The application does not run AI for every request. It caches translated keys and provides hot cache access to those keys. It has the ability to render text and audio translations.
+
+The **i18n** application is used in conjunction with the [php-avc](https://github.com/playandprosper/sponsor-avc) Model View Controller framework. It is compatible with **Ruby on Rails** and other `i18n` components. In fact, [php-avc](https://github.com/playandprosper/sponsor-avc) has a customized `i18n.php` helper script that interfaces with the engine itself, to provide an easier templating experience to the PHP framework. In Ruby, the [i18n-rubygem](https://github.com/playandprosper/i18n-rubygem) package is designed to provide that `i18n.php` interface into the **i18n** binary to the Rails framework. You can bring the **i18n** binary to any front end system. It's a basic HTTP GET request to `127.0.0.1:8888/en_US?key=&text=&context=` in order to get back the translated value. You can also hit `127.0.0.1:8888/meta?key=<key>` to extract data points like `language`, `country`, `currency`, `flag`, `bcp`, `capitol`, `tz`, `short`. Replace `<key>` with any one of them and the body of the request contains the value of the metadata property itself. The `flag` returns with a literal emoji like `🇺🇸`.
+
+By sponsoring the repository, you're not buying a copy of the source code for ownership. You're leasing a use license under BUSL 1.1 until it becomes open source on 11/11/2033. Without sponsorship, permission to run and use the binary is prohibited. To begin using **i18n** in _any capacity_ please select the $666/mo option here 👉🏻 https://github.com/sponsors/andreimerlescu. Sponsorship grants you read-only access to the _source code_ of i18n and it unlocks the binary download links below.
+
+Now, let me show you what you're sponsoring! When you see it live on the [Play and Prosper](https://playandprospertherapy.com/) website, it'll sell itself, but until that day arrives, this page will have to do until then. 
+
 ## Installation
 
-Once you've unlocked the repository, these links will work.
+Once you've unlocked the repository, these links will work. If you're not signed into GitHub or you haven't sponsored the developer yet, you'll see a 404 Not Found error on each of these links.
 
 | Target | Size | Checksum | &nbsp; |
 |---|---|---|---|
@@ -47,6 +57,15 @@ type sec time.Second
 type min time.Minute
 type str string
 ```
+
+The **i18n** binary is split into 4 components: 
+
+1. HTTP2 Daemon `:8888` 👉🏻 Frontend Frameworks ( like [php-avc](https://github.com/playandprosper/sponsor-avc) )
+2. HTTP Portal `:4444` 👉🏻 Runtime GUI + Monitor
+3. `-compile-audio` mode performs TTS using [voicebox](https://github.com/jamiepine/voicebox)-server generating `.wav` files
+4. `-transcode` mode compresses `.wav` files into `.mp3` files
+
+The entire runtime of the binary is controlled by the following flags. You read the first cell literally as `<flag>` a `<type>` is `<default>` where I am using _shorthand_ notation for `time.Duration`, `time.Second`, `time.Minute`, and `string` Go types.
 
 | Flag | Usage |
 |---|---|
@@ -117,6 +136,183 @@ When using _dur_ or `time.Duration`, it's captured as an `int` and requires you 
 
 For a more detailed look into `time.Duration` to `int` conversions for `flag.Duration` usage in Go, please see [this gist](https://gist.github.com/andreimerlescu/2c15535e22b5d0b3ba8141a1ecb8b98b).
 
+## PHP Usage
+
+The `i18n.php` file has the following header signature:
+
+```php
+<?php declare(strict_types=1);
+namespace AVC;
+
+require_once __DIR__ . '/router.php';
+require_once __DIR__ . '/html.php';
+
+final class i18n
+{
+
+    public static string $locale = LOCALE_UNITED_STATES['code'];
+    public static string $sourceLocale = LOCALE_UNITED_STATES['code'];
+    public static string $service = 'http://127.0.0.1:8888';
+    public static int $connectTimeoutMs = 5;
+    public static int $timeoutMs = 25;
+    public static ?HTML $html = null;
+
+    #[\NoDiscard]
+    public static function __(
+        string $text,
+        ?bool $raw = null,
+        string|array $icon = "",
+        string $place = "left",
+        string|array $classes = [],
+    ): string {}
+
+    #[\NoDiscard]
+    public static function translate(
+        string $key,
+        string $text,
+        ?string $context = null,
+        ?string $locale = null
+    ): string {}
+
+    public static function possessive(
+        string $string,
+        ?string $locale = null
+    ): string {}
+
+    #[\NoDiscard]
+    public static function gettext(string $text): string {}
+
+    public static function currency(float $amount, ?string $locale = null): string {}
+
+    public static function number(float $amount, ?string $locale = null): string {}
+
+    public static function convertCurrency(float|int $amount, string $from, string $to): float {}
+
+    #[\NoDiscard]
+    public static function html(): ?HTML {}
+
+    public static function metrics(): array {}
+
+    public static function engineMetrics(int $timeoutMs = 250): ?string {}
+
+    public static function resetMetrics(): void {}
+
+    public static function browserLocale(): string {}
+
+    public static function findLocale(): string {}
+}
+
+\class_alias(i18n::class, 'i18n');
+```
+
+Based on building out [Play and Prosper](https://playandprospertherapy.com/) website, it's probably best for you to see how the various components were built out with **i18n** through template usage examples: 
+
+An individual dropdown navbar menu from [bootstrap](https://getbootstrap.com) can be rendered using the i18n PHP helper script.
+
+**application/views/global/_footer.phtml**
+
+```php
+<?php declare(strict_types=1);
+// set this for use with Render::string()
+global $__li_class;
+global $__a_class;
+global $__hide_header;
+global $__br_on_header;
+$__li_class = "";
+$__a_class = "dropdown-item";
+$__hide_header = false;
+$__br_on_header = false;
+
+echo HTML::build()->tag(
+  tagName: "li",
+  classes: ["nav-item", "dropdown"],
+  contents: implode(" ", [
+    i18n::html()->a(
+      href: "#",
+      title: "Resources", // this gets injected into i18n for translation and relies on i18n::$locale 
+      classes: "nav-link dropdown-toggle",
+      extra: "role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"",
+      active: Render::if_action_in_controller(
+        controller: "section",
+        actions: ["item1", "item2"],
+      ),
+      icon: "bi-book-half", // uses bootstrap icons https://icons.getbootstrap.com/
+    ),
+    HTML::build()->tag(
+      tagName: "ul",
+      classes: "dropdown-menu",
+      contents: Render::string("menu", "_section_items"),
+    ),
+  ]),
+);
+```
+
+**application/views/menu/_section_items.phtml**
+
+```phtml
+<?php declare(strict_types=1);
+
+global $__li_class;
+global $__a_class;
+global $__hide_header;
+global $__br_on_header;
+
+$__li_class ??= "";
+$__a_class ??= "dropdown-item";
+$__hide_header ??= false;
+$__br_on_header ??= false;
+
+if(!$__hide_header){
+  echo "<li><h6 class=\"dropdown-header text-primary\">\n";
+  echo i18n::__("Dropdown Header Title");
+  echo "</h6></li>\n";
+}
+if(true === $__br_on_header) echo "</ol><ol class='breadcrumb'>\n";
+echo HTML::build()->tag(
+  tagName: "li",
+  classes: [$__li_class],
+  contents: i18n::html()->a(
+        href: "#",
+        title: "First Link",
+        classes: $__a_class,
+        active: Render::if_controller_action(
+            controller: "section",
+            action: "link1",
+        ),
+        icon: "bi-1-circle",
+    )
+);
+echo HTML::build()->tag(
+  tagName: "li",
+  classes: [$__li_class],
+  contents: i18n::html()->a(
+        href: "#",
+        title: "Second Link",
+        classes: $__a_class,
+        active: Render::if_controller_action(
+            controller: "section",
+            action: "link2",
+        ),
+        icon: "bi-2-circle",
+    )
+);
+```
+
+If you don't want your code to look like that, you don't have to! You can also use classic template styles too.
+
+```phtml
+<html>
+<head>
+  <title><?= i18n::__("This is the site title translated into dozens of languages"); ?></title>
+</head>
+<body>
+  <div>
+    <h1><?= i18n::__("My Website Title"); ?></h1>
+    <p><?= i18n::__("You can safely use this syntax hundreds of per times per page load with little to no impact on performance."); ?></p>
+  </div>
+</body>
+</html>
+```
 
 
 
