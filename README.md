@@ -109,54 +109,13 @@ When using _dur_ or `time.Duration`, it's captured as an `int` and requires you 
 
 | Human Time | Duration Value | Go Syntax |
 |---|---|---|
-| `1s` | `1000000000` | `1 * time.Second` |
-| `5s` | `5000000000` | `5 * time.Second` |
-| `10s` | `10000000000` | `10 * time.Second` |
 | `15s` | `15000000000` | `15 * time.Second` |
-| `20s` | `20000000000` | `20 * time.Second` |
-| `25s` | `25000000000` | `25 * time.Second` |
-| `30s` | `30000000000` | `30 * time.Second` |
-| `35s` | `35000000000` | `35 * time.Second` |
-| `40s` | `40000000000` | `40 * time.Second` |
-| `45s` | `45000000000` | `45 * time.Second` |
-| `50s` | `50000000000` | `50 * time.Second` |
-| `55s` | `55000000000` | `55 * time.Second` |
-| `60s` | `60000000000` | `60 * time.Second` |
 | `90s` | `90000000000` | `90 * time.Second` |
-| `1m` | `60000000000` | `1 * time.Minute` |
 | `2m` | `120000000000` | `2 * time.Minute` |
-| `3m` | `180000000000` | `3 * time.Minute` |
-| `4m` | `240000000000` | `4 * time.Minute` |
 | `5m` | `300000000000` | `5 * time.Minute` |
-| `10m` | `600000000000` | `10 * time.Minute` |
-| `15m` | `900000000000` | `15 * time.Minute` |
 | `30m` | `1800000000000` | `30 * time.Minute` |
-| `45m` | `2700000000000` | `45 * time.Minute` |
-| `60m` | `3600000000000` | `60 * time.Minute` |
-| `1h` | `3600000000000` | `1 * time.Hour` |
-| `2h` | `7200000000000` | `2 * time.Hour` |
-| `3h` | `10800000000000` | `3 * time.Hour` |
-| `4h` | `14400000000000` | `4 * time.Hour` |
-| `5h` | `18000000000000` | `5 * time.Hour` |
-| `6h` | `21600000000000` | `6 * time.Hour` |
-| `7h` | `25200000000000` | `7 * time.Hour` |
-| `8h` | `28800000000000` | `8 * time.Hour` |
-| `9h` | `32400000000000` | `9 * time.Hour` |
-| `10h` | `36000000000000` | `10 * time.Hour` |
-| `11h` | `39600000000000` | `11 * time.Hour` |
-| `12h` | `43200000000000` | `12 * time.Hour` |
-| `13h` | `46800000000000` | `13 * time.Hour` |
-| `14h` | `50400000000000` | `14 * time.Hour` |
-| `15h` | `54000000000000` | `15 * time.Hour` |
-| `16h` | `57600000000000` | `16 * time.Hour` |
-| `17h` | `61200000000000` | `17 * time.Hour` |
-| `18h` | `64800000000000` | `18 * time.Hour` |
-| `19h` | `68400000000000` | `19 * time.Hour` |
-| `20h` | `72000000000000` | `20 * time.Hour` |
-| `21h` | `75600000000000` | `21 * time.Hour` |
-| `22h` | `79200000000000` | `22 * time.Hour` |
-| `23h` | `82800000000000` | `23 * time.Hour` |
-| `24h` | `86400000000000` | `24 * time.Hour` |
+
+For a more detailed look into `time.Duration` to `int` conversions for `flag.Duration` usage in Go, please see [this gist](https://gist.github.com/andreimerlescu/2c15535e22b5d0b3ba8141a1ecb8b98b).
 
 
 
