@@ -11,14 +11,14 @@ The **i18n** product is being built to support philanthropic efforts of [Play an
 - 📦 Repository 👉🏻 https://github.com/playandprosper/i18n 🔒
 - 🔓 Unlock 👉🏻 https://github.com/sponsors/andreimerlescu 🤩
 
-`.wav` Sample Audio `de_DE`: [40553f7e6b6cf59678e9cf35fc84ebeb53d09c983b20da756fa8faef1b1343bc.de_DE.wav](40553f7e6b6cf59678e9cf35fc84ebeb53d09c983b20da756fa8faef1b1343bc.de_DE.wav)
+`.wav` Sample Audio `de_DE`: [samples/40553f7e6b6cf59678e9cf35fc84ebeb53d09c983b20da756fa8faef1b1343bc.de_DE.wav](40553f7e6b6cf59678e9cf35fc84ebeb53d09c983b20da756fa8faef1b1343bc.de_DE.wav)
 
-`.mp3` Sample Audio `ru_RU`: [ru_RU.d259495e142fe3f26e27be4dec63d03dc985daba73c23e7d3b36b807832674fe.en_US.ce06a6280ae22bd3e65552989baa29c512eb7cdd61dd206b1257066de19cfa36.mp3](ru_RU.d259495e142fe3f26e27be4dec63d03dc985daba73c23e7d3b36b807832674fe.en_US.ce06a6280ae22bd3e65552989baa29c512eb7cdd61dd206b1257066de19cfa36.mp3)
+`.mp3` Sample Audio `ru_RU`: [samples/ru_RU.d259495e142fe3f26e27be4dec63d03dc985daba73c23e7d3b36b807832674fe.en_US.ce06a6280ae22bd3e65552989baa29c512eb7cdd61dd206b1257066de19cfa36.mp3](ru_RU.d259495e142fe3f26e27be4dec63d03dc985daba73c23e7d3b36b807832674fe.en_US.ce06a6280ae22bd3e65552989baa29c512eb7cdd61dd206b1257066de19cfa36.mp3)
 
 
 **i18n** is a universal application written in _Go_ that provides an internationalization and localization daemon that a web application can consume to provide translations in dozens of languages using AI. The application does not run AI for every request. It caches translated keys and provides hot cache access to those keys. It has the ability to render text and audio translations.
 
-![Preview of Play and Prosper Website](website_banner_greek_preview.jpg)
+![Preview of Play and Prosper Website](images/website_banner_greek_preview.jpg)
 
 The **i18n** application is used in conjunction with the [php-avc](https://github.com/playandprosper/sponsor-avc) Model View Controller framework. It is compatible with **Ruby on Rails** and other `i18n` components. In fact, [php-avc](https://github.com/playandprosper/sponsor-avc) has a customized `i18n.php` helper script that interfaces with the engine itself, to provide an easier templating experience to the PHP framework. In Ruby, the [i18n-rubygem](https://github.com/playandprosper/i18n-rubygem) package is designed to provide that `i18n.php` interface into the **i18n** binary to the Rails framework. You can bring the **i18n** binary to any front end system. It's a basic HTTP GET request to `127.0.0.1:8888/en_US?key=&text=&context=` in order to get back the translated value. You can also hit `127.0.0.1:8888/meta?key=<key>` to extract data points like `language`, `country`, `currency`, `flag`, `bcp`, `capitol`, `tz`, `short`. Replace `<key>` with any one of them and the body of the request contains the value of the metadata property itself. The `flag` returns with a literal emoji like `🇺🇸`.
 
@@ -63,7 +63,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 
 ## Running `i18n`
 
-![Portal Login](portal_login.jpg)
+![Portal Login](images/portal_login.jpg)
 
 The **Play and Prosper** website uses this helper script to boot `voicebox-server` and `i18n`. It requires **LMStudio** to be opened manually before launching. However, once running, this script makes some assumptions. Change the variables to your values before running.
 
@@ -348,27 +348,27 @@ The application is designed to set it and forget it, but if you want to get into
 
 Every piece of data live updates every 5s. 
 
-![Tab Dashboard](i18n_tab_dashboard.jpg)
+![Tab Dashboard](images/i18n_tab_dashboard.jpg)
 
 ### Records Management
 
 With tens of thousands of records in the global system, each specific language will typically contain several thousand keys each. From this interface, you can directly access and play the sound file using an HTML5 element.
 
-![Tab Records](i18n_tab_records.jpg)
+![Tab Records](images/i18n_tab_records.jpg)
 
 ### Trash
 
 The trash deletes itself based on the flag, and in the interface, you can empty the trash immediately.
 
-![Tab Trash](i18n_tab_trash.jpg)
+![Tab Trash](images/i18n_tab_trash.jpg)
 
 ### Monitor
 
 Refresh cadence can be as often as every 5s to display the graphs and live data about the runtime of the application.
 
-![Tab Monitor](i18n_tab_monitor.jpg)
+![Tab Monitor](images/i18n_tab_monitor.jpg)
 
-![Tab Monitor Stats](i18n_tab_stats.jpg)
+![Tab Monitor Stats](images/i18n_tab_stats.jpg)
 
 You can also connect to Victoria Metrics or Prometheus to [http://localhost:8888/metrics](http://localhost:8888/metrics) and observe the following data points in your Grafana dashboard.
 
@@ -905,7 +905,7 @@ This frontend implementation of `i18n-mousetrap.js` is part of how Play and Pros
 
 Thank you for using **i18n** and for choosing to sponsor the development of this piece of globalization technology.
 
-![Footer](website_footer_english_preview.jpg)
+![Footer](images/website_footer_english_preview.jpg)
 
  Thank you רוּחַ הַקֹּדֶשׁ יֵשׁוּעַ יהוה 💜
 
