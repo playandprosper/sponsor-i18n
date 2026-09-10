@@ -54,7 +54,7 @@ type min time.Minute
 | `-from` a `string` is `en_US` | `-` | Source locale |
 | `-key` a `string` is `<empty>` | `-` | Translation to process |
 | `-text` a `string` is `<empty>` | `-` | **CLI Mode:** Translation to process |
-| `-addr` a `string` is `127.0.0.1:8888` | `I18N_ADDR` |  |
+| `-addr` a `string` is `127.0.0.1:8888` | `I18N_ADDR` | HTTP Daemon Process Port |
 | `-force` a `bool` is `false` | `-` | Ignore cache |
 | `-lm-server` a `[]string` is `<empty>` | `LM_SERVER` | CSV of `URL=MODEL` LM Studio Hosts |
 | `-lm-url` a `string` is `http://127.0.0.1:1234/v1` | `AI_HOST` | **Single:** LMStudio API URL  |
