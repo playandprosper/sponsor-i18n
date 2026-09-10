@@ -9,7 +9,7 @@ The **i18n** product is being built to support philanthropic efforts of [Play an
 
 The **i18n** application is used in conjunction with the [php-avc](https://github.com/playandprosper/sponsor-avc) Model View Controller framework. It is compatible with **Ruby on Rails** and other `i18n` components. In fact, [php-avc](https://github.com/playandprosper/sponsor-avc) has a customized `i18n.php` helper script that interfaces with the engine itself, to provide an easier templating experience to the PHP framework. In Ruby, the [i18n-rubygem](https://github.com/playandprosper/i18n-rubygem) package is designed to provide that `i18n.php` interface into the **i18n** binary to the Rails framework. You can bring the **i18n** binary to any front end system. It's a basic HTTP GET request to `127.0.0.1:8888/en_US?key=&text=&context=` in order to get back the translated value. You can also hit `127.0.0.1:8888/meta?key=<key>` to extract data points like `language`, `country`, `currency`, `flag`, `bcp`, `capitol`, `tz`, `short`. Replace `<key>` with any one of them and the body of the request contains the value of the metadata property itself. The `flag` returns with a literal emoji like `🇺🇸`.
 
-By sponsoring the repository, you're not buying a copy of the source code for ownership. You're leasing a use license under BUSL 1.1 until it becomes open source on 11/11/2033. Without sponsorship, permission to run and use the binary is prohibited. To begin using **i18n** in _any capacity_ please select the $666/mo option here 👉🏻 https://github.com/sponsors/andreimerlescu. Sponsorship grants you read-only access to the _source code_ of i18n and it unlocks the binary download links below.
+By sponsoring the repository, you're not buying a copy of the source code for ownership. You're being granted a limited use license under BUSL 1.1 until it becomes open source on 11/11/2033. Without sponsorship, permission to run and use the binary is prohibited. To begin using **i18n** in _any capacity_ please select the $666/mo option here 👉🏻 https://github.com/sponsors/andreimerlescu. Sponsorship grants you read-only access to the _source code_ of i18n and it unlocks the binary download links below.
 
 Now, let me show you what you're sponsoring! When you see it live on the [Play and Prosper](https://playandprospertherapy.com/) website, it'll sell itself, but until that day arrives, this page will have to do until then. 
 
@@ -166,14 +166,6 @@ final class i18n
         string|array $classes = [],
     ): string {}
 
-    #[\NoDiscard]
-    public static function translate(
-        string $key,
-        string $text,
-        ?string $context = null,
-        ?string $locale = null
-    ): string {}
-
     public static function possessive(
         string $string,
         ?string $locale = null
@@ -182,20 +174,8 @@ final class i18n
     #[\NoDiscard]
     public static function gettext(string $text): string {}
 
-    public static function currency(float $amount, ?string $locale = null): string {}
-
-    public static function number(float $amount, ?string $locale = null): string {}
-
-    public static function convertCurrency(float|int $amount, string $from, string $to): float {}
-
     #[\NoDiscard]
     public static function html(): ?HTML {}
-
-    public static function metrics(): array {}
-
-    public static function engineMetrics(int $timeoutMs = 250): ?string {}
-
-    public static function resetMetrics(): void {}
 
     public static function browserLocale(): string {}
 
@@ -226,7 +206,7 @@ $__br_on_header = false;
 echo HTML::build()->tag(
   tagName: "li",
   classes: ["nav-item", "dropdown"],
-  contents: implode(" ", [
+  contents: implode("\n", [
     i18n::html()->a(
       href: "#",
       title: "Resources", // this gets injected into i18n for translation and relies on i18n::$locale 
@@ -263,11 +243,19 @@ $__hide_header ??= false;
 $__br_on_header ??= false;
 
 if(!$__hide_header){
-  echo "<li><h6 class=\"dropdown-header text-primary\">\n";
-  echo i18n::__("Dropdown Header Title");
-  echo "</h6></li>\n";
+  echo HTML::build()->tag(
+    tagName: "li",
+    contents: HTML::build()->tag(
+      tagName: "h6",
+      classes: ["dropdown-header", "text-primary"],
+      contents: "Translated Dropdown Header Title",
+    ),
+  );
 }
+
 if(true === $__br_on_header) echo "</ol><ol class='breadcrumb'>\n";
+
+// prints <li><a href="#" class="active">First Link</a></li>
 echo HTML::build()->tag(
   tagName: "li",
   classes: [$__li_class],
@@ -282,6 +270,8 @@ echo HTML::build()->tag(
         icon: "bi-1-circle",
     )
 );
+
+// prints <li><a href="#" class=" ">Second Link</a></li>
 echo HTML::build()->tag(
   tagName: "li",
   classes: [$__li_class],
@@ -314,5 +304,8 @@ If you don't want your code to look like that, you don't have to! You can also u
 </html>
 ```
 
+## Thank You!
+
+Thank you for using **i18n** and for choosing to sponsor the development of this piece of globalization technology.
 
 
