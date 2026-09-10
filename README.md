@@ -786,13 +786,19 @@ while true; do
 done
 ```
 
+## Air Gap Projects
+
 Yes, **i18n** can run entirely offline while disconnected from the internet. Depending on your settings, the AI, TTS and transcoding can utilize your system resources extensively. If running on battery, you'll deplete quickly. If you're on a low powered source, like a train or bus, you'll be plugged in but your battery will keep going down faster than energy is going in. It's written in Go and designed to use the full resources available to it as if it was running on a server. Given this information, yes, you can run **i18n** while in Airplane mode and you'll generate _new translations_ for your content.
 
 What this really means is that if you're operating in a space that you **require air gap security** then this product is literally built _for you._ The developer of this project was recruited into Cisco Systems' in Enhanced Customer Aligned Testing Services (eCATS) that got transformed into Solution Validation Services (SVS). Much of the software there and then needed to run in air-gapped networks. That work happened 17 years ago! A decade ago they were at Oracle releasing OCI into the world to compete with Amazon's AWS. Air gapped security was mandatory. 
+
+This means organizations like _Defense, Gaming, Finance and Education_ can utilize #i18n to provide a **rich user experience** designed to demystify globalization, speech language pathology, and advance the causes of Dr Ajzenman's Play and Prosper Therapy through sponsoring this project. A simple sponsorship gets you a seat at the table during the development of this product that will be used to globally transform treatment approaches for disabled children worldwide.
 
 ## Thank You!
 
 Thank you for using **i18n** and for choosing to sponsor the development of this piece of globalization technology.
 
 ![Footer](website_footer_english_preview.jpg)
+
+ Thank you רוּחַ הַקֹּדֶשׁ יֵשׁוּעַ יהוה 💜
 
