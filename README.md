@@ -107,7 +107,7 @@ type str string
 
 When using _dur_ or `time.Duration`, it's captured as an `int` and requires you to use `time.Duration` values.
 
-| Human Time | Duration Value | Go Syntax |
+| Human Time | `time.Duration` Value | Go Syntax |
 |---|---|---|
 | `15s` | `15000000000` | `15 * time.Second` |
 | `90s` | `90000000000` | `90 * time.Second` |
