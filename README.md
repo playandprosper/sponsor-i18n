@@ -2,13 +2,13 @@
 
 🥈 This i18n project attempts to serve that purpose using Go for web applications written in PHP, TypeScript, Ruby, Python or anything capable of consuming HTTP2 GET to `127.0.0.1:8888/ro_RO` with a post body.
 
-🥉 **i18n** is proprietary commercial software. It is not open source. Compiled binaries are licensed per minor version for $39.99, and sponsors at the $666/mo tier receive confidential read-only access to the source code. The full terms are in the [End-User License Agreement](https://YOUR-DOMAIN/eula.php).
+🥉 **i18n** is proprietary commercial software. It is not open source. Compiled binaries are licensed per minor version for $39.99, and sponsors at the $666/mo tier receive confidential read-only access to the source code. The full terms are in the [End-User License Agreement](https://www.i18n.software/eula.php).
 
 # About Play and Prosper's Sponsor i18n Offering
 
 The **i18n** product is being built to support philanthropic efforts of [Play and Prosper](https://playandprospertherapy.com/). This product was built to provide information resources to patients around the world in a localized and accessible manner.
 
-- 🛒 Buy the binary 👉🏻 https://YOUR-DOMAIN/buy.php
+- 🛒 Buy the binary 👉🏻 https://www.i18n.software/buy.php
 - 🔓 Sponsor 👉🏻 https://github.com/sponsors/andreimerlescu 🤩
 - 📦 Repository 👉🏻 https://github.com/playandprosper/i18n 🔒 _(sponsors only)_
 
@@ -26,7 +26,7 @@ The **i18n** application is used in conjunction with the [php-avc](https://githu
 
 **i18n** is licensed, not sold. Neither a purchase nor a sponsorship transfers ownership of the software or its source code. There are two ways in.
 
-**Binary license: $39.99 per minor version.** Buy on the [i18n website](https://YOUR-DOMAIN/buy.php) and a signed download link is emailed to you. The license covers every patch release in that minor version line (for example, every `0.0.x` release) and permits production use inside your own application. You receive compiled binaries only, with up to 9 downloads from the network you purchased on. Lost the email? The order lookup on the website recovers your download commands and SHA256 checksums.
+**Binary license: $39.99 per minor version.** Buy on the [i18n website](https://www.i18n.software/buy.php) and a signed download link is emailed to you. The license covers every patch release in that minor version line (for example, every `0.0.x` release) and permits production use inside your own application. You receive compiled binaries only, with up to 9 downloads from the network you purchased on. Lost the email? The order lookup on the website recovers your download commands and SHA256 checksums.
 
 **Sponsorship: $666/month via [GitHub Sponsors](https://github.com/sponsors/andreimerlescu).** Sponsors receive a binary license for every minor version released while their sponsorship is active, confidential read-only access to the private repository, the ability to build from source, and up to 3 hours per month of the developer's time for features and integrations. Source code is confidential and may not be redistributed. Repository access ends when sponsorship ends; binaries you already hold stay licensed.
 
