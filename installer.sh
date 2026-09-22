@@ -45,12 +45,12 @@ fi
 : "${WEB_GROUP=""}"                 # auto-detected: www-data, nginx, apache
 : "${BIN_DEST="/usr/local/bin/i18n"}"
 
-: "${BASE="/var/www/i18n.software"}"
+: "${BASE="/var/www"}"
 : "${PORTAL_PORT="4444"}"
 : "${DAEMON_PORT="8888"}"
 : "${ADDR="127.0.0.1:${DAEMON_PORT}"}"
 : "${DB_DIR="${BASE}/private/db"}"
-: "${DB="${DB_DIR}/i18n.software.db"}"
+: "${DB="${DB_DIR}/var.www.db"}"
 : "${WAV_DIR="${BASE}/public/wav"}"
 : "${MP3_DIR="${BASE}/public/mp3"}"
 : "${LOG_DIR="${BASE}/private/logs"}"
